@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym App</title>
+<style>
+body { font-family: Arial; text-align: center; }
+table { margin: auto; border-collapse: collapse; font-size:18px;}
+td, th { border:1px solid black; padding:12px; }
+button { font-size:24px; padding:20px; margin:20px; width:80%; }
+.done { background: lightblue; }
+</style>
+</head>
+<body>
+
+<h1>Gym App</h1>
+<button onclick="start()">START</button>
+
+<div id="main" style="display:none">
+<h2>Upper Day</h2>
+<table id="upper"></table>
+
+<h2>Lower Day</h2>
+<table id="lower"></table>
+
+<button onclick="toggleEdit()">EDIT</button>
+</div>
+
+<div id="exercise" style="display:none">
+<h2 id="title"></h2>
+<table>
+<tr>
+<th>Warm</th><th>120s</th>
+<th>Work</th><th>120s</th>
+<th>De-load</th>
+</tr>
+<tr>
+<td id="w" onclick="run(this)"></td>
+<td id="t1"></td>
+<td id="wk" onclick="run(this)"></td>
+<td id="t2"></td>
+<td id="d" onclick="finish(this)"></td>
+</tr>
+</table>
+</div>
+
+<script>
+let edit=false;
+
+let data = [
+["Lat pulldown","45","55","50","upper"],
+["Upper back","25","32.5","30","upper"],
+["Low row","30","37.25","32.5","upper"],
+["Chest press","35","42.5","37.5","upper"],
+["Vertical traction","45","55","50","upper"],
+["Shoulder press","7.5","10","7.5","upper"],
+["Pectoral","32.5","40","35","upper"],
+["Dip assist","52.5","42","47.5","upper"],
+["Yellow low row","32.5 per side","40 per side","35 per side","upper"],
+["Yellow incline chest press","7.5 per side","10 per side","7.5 per side","upper"],
+["Yellow shoulder","7.5 per side","10 per side","7.5 per side","upper"],
+
+["Leg / glute press","105","130","120","lower"],
+["Leg extension","35","45","40","lower"],
+["Abductor - out","55","70","62.5","lower"],
+["Abductee - in","52.5","65","57.5","lower"],
+["Lower back machine","50","62.5","57.5","lower"],
+["Ab machine","27.5","35","32.5","lower"],
+["Yellow leg / glute press","55 per side","70 per side","62.5 per side","lower"],
+["Yellow one leg arse","60","75","67.5","lower"]
+];
+
+function render(){
+let u='<tr><th>Exercise</th><th>Warm</th><th>Work</th><th>De</th></tr>';
+let l=u;
+
+data.forEach((e,i)=>{
+let row = `<tr>
+<td onclick="openEx(${i})">${e[0]}</td>
+<td>${e[1]}</td>
+<td>${e[2]}</td>
+<td>${e[3]}</td>
+</tr>`;
+
+if(e[4]=="upper") u+=row; else l+=row;
+});
+
+document.getElementById("upper").innerHTML=u;
+document.getElementById("lower").innerHTML=l;
+}
+
+function start(){
+document.querySelector("button").style.display="none";
+document.getElementById("main").style.display="block";
+render();
+}
+
+function openEx(i){
+let e=data[i];
+document.getElementById("title").innerText=e[0];
+document.getElementById("w").innerText=e[1];
+document.getElementById("wk").innerText=e[2];
+document.getElementById("d").innerText=e[3];
+
+document.getElementById("main").style.display="none";
+document.getElementById("exercise").style.display="block";
+}
+
+function run(el){
+el.classList.add("done");
+let t=120;
+let target = el.id=="w" ? "t1":"t2";
+let d=document.getElementById(target);
+
+d.innerText=t;
+
+let i=setInterval(()=>{
+t--;
+d.innerText=t;
+if(t<=0) clearInterval(i);
+},1000);
+}
+
+function finish(el){
+el.classList.add("done");
+document.getElementById("exercise").style.display="none";
+document.getElementById("main").style.display="none";
+document.querySelector("button").style.display="inline";
+}
+
+function toggleEdit(){
+alert("Edit mode coming next");
+}
+</script>
+
+</body>
+</html>
