@@ -124,16 +124,19 @@ document.getElementById("d").innerText=e[3];
 document.getElementById("main").style.display="none";
 document.getElementById("exercise").style.display="block";
 
-// reset timers
-document.getElementById("t1").classList.remove("done");
-document.getElementById("t2").classList.remove("done");
-document.getElementById("t1").innerText="";
-document.getElementById("t2").innerText="";
+// reset colours
+["w","wk","d","t1","t2"].forEach(id=>{
+document.getElementById(id).classList.remove("done");
+document.getElementById(id).innerText = id=="t1"||id=="t2" ? "" : document.getElementById(id).innerText;
+});
 }
 
 function run(el){
 
-// if user skips ahead → mark previous timer blue
+// make clicked cell blue immediately
+el.classList.add("done");
+
+// previous timer goes blue if skipped
 if(el.id=="wk"){
 document.getElementById("t1").classList.add("done");
 }
@@ -159,7 +162,11 @@ d.classList.add("done");
 }
 
 function finish(el){
-el.classList.add("done");
+
+// make ALL cells blue
+["w","wk","d","t1","t2"].forEach(id=>{
+document.getElementById(id).classList.add("done");
+});
 
 data[currentIndex][5]=true;
 save();
@@ -178,7 +185,7 @@ function editCell(i,col){
 if(!edit) return;
 
 let v=prompt("Edit value", data[i][col]);
-if(v){
+if(v!==null){
 data[i][col]=v;
 save();
 render();
