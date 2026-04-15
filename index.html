@@ -123,9 +123,24 @@ document.getElementById("d").innerText=e[3];
 
 document.getElementById("main").style.display="none";
 document.getElementById("exercise").style.display="block";
+
+// reset timers
+document.getElementById("t1").classList.remove("done");
+document.getElementById("t2").classList.remove("done");
+document.getElementById("t1").innerText="";
+document.getElementById("t2").innerText="";
 }
 
 function run(el){
+
+// if user skips ahead → mark previous timer blue
+if(el.id=="wk"){
+document.getElementById("t1").classList.add("done");
+}
+if(el.id=="d"){
+document.getElementById("t2").classList.add("done");
+}
+
 let t=120;
 let target = el.id=="w" ? "t1":"t2";
 let d=document.getElementById(target);
@@ -138,7 +153,7 @@ d.innerText=t;
 
 if(t<=0){
 clearInterval(i);
-d.classList.add("done"); // BLUE TIMER
+d.classList.add("done");
 }
 },1000);
 }
@@ -146,7 +161,7 @@ d.classList.add("done"); // BLUE TIMER
 function finish(el){
 el.classList.add("done");
 
-data[currentIndex][5]=true; // mark row done
+data[currentIndex][5]=true;
 save();
 
 document.getElementById("exercise").style.display="none";
