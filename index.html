@@ -40,11 +40,11 @@ button { font-size:24px; padding:20px; margin:20px; width:80%; }
 <th>De-load</th>
 </tr>
 <tr>
-<td id="w" onclick="run(this)"></td>
-<td id="t1"></td>
-<td id="wk" onclick="run(this)"></td>
-<td id="t2"></td>
-<td id="d" onclick="finish(this)"></td>
+<td id="w" onclick="tapCell(this)"></td>
+<td id="t1" onclick="runTimer(this)"></td>
+<td id="wk" onclick="tapCell(this)"></td>
+<td id="t2" onclick="runTimer(this)"></td>
+<td id="d" onclick="tapCell(this)"></td>
 </tr>
 </table>
 
@@ -124,56 +124,33 @@ document.getElementById("d").innerText=e[3];
 document.getElementById("main").style.display="none";
 document.getElementById("exercise").style.display="block";
 
-// reset colours
+// reset colours + timers
 ["w","wk","d","t1","t2"].forEach(id=>{
 document.getElementById(id).classList.remove("done");
-document.getElementById(id).innerText = id=="t1"||id=="t2" ? "" : document.getElementById(id).innerText;
+document.getElementById(id).innerText = (id=="t1"||id=="t2") ? "" : document.getElementById(id).innerText;
 });
 }
 
-function run(el){
-
-// make clicked cell blue immediately
+// 👉 tap number = turn blue ONLY
+function tapCell(el){
 el.classList.add("done");
+}
 
-// previous timer goes blue if skipped
-if(el.id=="wk"){
-document.getElementById("t1").classList.add("done");
-}
-if(el.id=="d"){
-document.getElementById("t2").classList.add("done");
-}
+// 👉 tap timer = start countdown
+function runTimer(el){
 
 let t=120;
-let target = el.id=="w" ? "t1":"t2";
-let d=document.getElementById(target);
-
-d.innerText=t;
+el.innerText=t;
 
 let i=setInterval(()=>{
 t--;
-d.innerText=t;
+el.innerText=t;
 
 if(t<=0){
 clearInterval(i);
-d.classList.add("done");
+el.classList.add("done");
 }
 },1000);
-}
-
-function finish(el){
-
-// make ALL cells blue
-["w","wk","d","t1","t2"].forEach(id=>{
-document.getElementById(id).classList.add("done");
-});
-
-data[currentIndex][5]=true;
-save();
-
-document.getElementById("exercise").style.display="none";
-document.getElementById("main").style.display="block";
-render();
 }
 
 function toggleEdit(){
