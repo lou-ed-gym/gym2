@@ -11,13 +11,17 @@ td, th { border:1px solid black; padding:12px; }
 button { font-size:24px; padding:20px; margin:20px; width:80%; }
 .done { background: lightblue; }
 
-/* FIXED BACK BUTTON */
+/* BIG visible back button */
 .backBtn {
-display:inline-block;
-border:2px solid black;
-padding:10px 20px;
-margin:10px;
-font-size:18px;
+position: fixed;
+top: 10px;
+right: 10px;
+width: 50px;
+height: 50px;
+border: 3px solid black;
+background: white;
+font-size: 20px;
+line-height: 50px;
 }
 </style>
 </head>
@@ -41,10 +45,10 @@ font-size:18px;
 
 <div id="exercise" style="display:none">
 
-<h2 id="title"></h2>
+<!-- BACK BUTTON (now fixed top right) -->
+<div class="backBtn" onclick="goBack()">←</div>
 
-<!-- CLEAR BACK BUTTON -->
-<div class="backBtn" onclick="goBack()">BACK</div>
+<h2 id="title"></h2>
 
 <table>
 <tr>
@@ -116,4 +120,79 @@ document.getElementById("upper").innerHTML=u;
 document.getElementById("lower").innerHTML=l;
 }
 
-function
+function start(){
+document.querySelector("button").style.display="none";
+document.getElementById("main").style.display="block";
+render();
+}
+
+function openEx(i){
+if(edit) return;
+
+currentIndex=i;
+
+let e=data[i];
+
+document.getElementById("title").innerText=e[0];
+document.getElementById("w").innerText=e[1];
+document.getElementById("wk").innerText=e[2];
+document.getElementById("d").innerText=e[3];
+
+document.getElementById("main").style.display="none";
+document.getElementById("exercise").style.display="block";
+
+// reset colours
+["w","wk","d","t1","t2"].forEach(id=>{
+document.getElementById(id).classList.remove("done");
+document.getElementById(id).innerText = (id=="t1"||id=="t2") ? "" : document.getElementById(id).innerText;
+});
+}
+
+function tapCell(el){
+el.classList.add("done");
+}
+
+function runTimer(el){
+let t=120;
+el.innerText=t;
+
+let i=setInterval(()=>{
+t--;
+el.innerText=t;
+
+if(t<=0){
+clearInterval(i);
+el.classList.add("done");
+}
+},1000);
+}
+
+function goBack(){
+data[currentIndex][5]=true;
+save();
+
+document.getElementById("exercise").style.display="none";
+document.getElementById("main").style.display="block";
+render();
+}
+
+function toggleEdit(){
+edit=!edit;
+document.getElementById("editBtn").innerText = edit ? "DONE" : "EDIT";
+}
+
+function editCell(i,col){
+if(!edit) return;
+
+let v=prompt("Edit value", data[i][col]);
+if(v!==null){
+data[i][col]=v;
+save();
+render();
+}
+}
+
+</script>
+
+</body>
+</html>
